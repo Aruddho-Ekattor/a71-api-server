@@ -5,8 +5,9 @@ from . import models
 
 
 class ProfileAdmin(admin.ModelAdmin):
-    list_display = ('__str__', 'address', 'profile_picture_preview','cover_photo_preview',)
-    
+    list_display = ('__str__', 'skills', 'address', 'profile_picture_preview', 'cover_photo_preview',)
+    search_fields = ('user__full_name', 'address',)  
+
     def profile_picture_preview(self, obj):
         return obj.profile_picture_preview_html()
     
