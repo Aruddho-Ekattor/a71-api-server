@@ -56,9 +56,9 @@ class UserManager(BaseUserManager):
 class User(AbstractBaseUser, PermissionsMixin):
     
     USER_TYPE = (
-    ('Member', 'Member'),
-    ('Executive', 'Executive'),
-    ('Admin', 'Admin'),
+        ('Member', 'Member'),
+        ('Executive', 'Executive'),
+        ('Admin', 'Admin'),
     )
 
     email = models.EmailField(verbose_name='email address', max_length=255, unique=True)
