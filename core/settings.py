@@ -43,7 +43,8 @@ INSTALLED_APPS = [
 
     # local apps
     "users",
-
+    "profiles",
+    
     # rest framework
     "rest_framework",
 ]
