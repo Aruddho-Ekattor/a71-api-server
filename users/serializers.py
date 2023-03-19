@@ -1,10 +1,12 @@
 from rest_framework import serializers
-from . import models
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 class SignUpSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = models.User
+        model = User
         fields = [
             'email',
             'full_name',
@@ -17,7 +19,7 @@ class SignUpSerializer(serializers.ModelSerializer):
         }
     
     def create(self, validated_data):
-        user = models.User.objects.create_user(
+        user = User.objects.create_user(
             email=validated_data['email'],
             full_name=validated_data['full_name'],
             phone_number=validated_data['phone_number'],
@@ -27,13 +29,14 @@ class SignUpSerializer(serializers.ModelSerializer):
         return user
     
 
-class SignInSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.User
-        fields = [
-            'phone_number',
-            'password',
-        ]
-        extra_kwargs = {
-            'password': {'write_only': True}
-        }
+class SignInSerializer(serializers.Serializer):
+    phone_number = serializers.CharField(max_length=13, required=True)
+    password = serializers.CharField(required=True, write_only=True)
+
+    def validate(self, data):
+        user = User.objects.filter(phone_number=data['phone_number']).first()
+        if user is None:
+            raise serializers.ValidationError("User with this phone number does not exist")
+        if not user.check_password(data['password']):
+            raise serializers.ValidationError("Incorrect password")
+        return data
